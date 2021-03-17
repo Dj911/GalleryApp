@@ -1,10 +1,10 @@
 const express = require('express');
 
-const { signup, login, updateProfile, updatePicture, checkImageKey, favouriteImage, getUserImages } = require('../controllers/user');
+const { signup, login, updateProfile, updatePicture, checkImageKey, favouriteImage, getUserProfileImages, getUserImages } = require('../controllers/user');
 
-const { assignImageToUser } = require('../controllers/media');
+const { uploadUserImage } = require('../controllers/media');
 
-const { image, upload, imageError, noneUpload } = require('../utils/multerFileUpload');
+const { image, upload, imageError, noneUpload, mediaUpload } = require('../utils/multerFileUpload');
 
 const { permission } = require('../controllers/auth');
 
@@ -18,16 +18,15 @@ router.post('/signup', signup);
 
 router.post('/login', login);
 
-router.get('/images',
-    // permission, 
-    getUserImages)
+router.get('/profileImage/:id', permission, getUserProfileImages);
+router.get('/images/:id', permission, getUserImages);
 
 router.put('/updateProfile/:id', permission, updateProfile);
-router.post('/updatePicture/:id', permission, checkImageKey, upload.single('photo'), imageError, updatePicture);
+router.post('/updatePicture/:id', permission, mediaUpload.single('photo'), imageError, updatePicture);
 
 
-router.put('/addImage/:id', permission, assignImageToUser)    //id = userid
-router.route('/favImage/:task/:id').put(permission, favouriteImage).get(permission, favouriteImage);
+router.post('/addImage/:id', permission, mediaUpload.array('photo',10), imageError, image)    //id = userid
+router.route('/favImage/:task/:id').put(permission, favouriteImage).get(permission, favouriteImage);        // GET, UPDATE, DELETE Fav Images of User
 
 // router.post('/image/:id', permission, upload.single('photo'), imageError, image);
 

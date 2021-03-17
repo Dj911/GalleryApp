@@ -16,8 +16,6 @@ const alertSignupBox = document.getElementById('alertSignup');
 
 const container = document.getElementById('container');
 
-
-
 // FUNCTIONS
 const signup = async () => {
     const res = axios.post(`${window.location.origin}/user/signup`, {
@@ -38,11 +36,11 @@ const signin = async () => {
     const res = await axios.post(`${window.location.origin}/user/login`, {
         email: loginEmail.value, //|| adminUsername.value,
         password: loginPass.value //|| adminPassword.value
-    })
-
+    })    
+    console.log(res.data.data)
     if (res.data.status === 'Success') {
         localStorage.setItem('token', res.data.data.token);
-        localStorage.setItem('userid', res.data.data.userId);
+        localStorage.setItem('userid', res.data.data._id);
         location.href = "/dashboard";
     } else {
         console.log(res.data)
@@ -59,5 +57,5 @@ signUpButton.addEventListener('click', () => {
 signInButton.addEventListener('click', () => {
     container.classList.remove("right-panel-active");
 });
-signinBtn.addEventListener('click', signin)
 signupBtn.addEventListener('click', signup)
+signinBtn.addEventListener('click', signin)

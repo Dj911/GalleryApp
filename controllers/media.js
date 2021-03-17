@@ -8,21 +8,7 @@ const { findByIdAndUpdate } = require('../models/user');
 
 exports.getAllImages = async (req, res, next) => {      // FORM DATABASE NOT S3
     try {
-        const data = await getAllFiles();
-        console.log(data);
-        res.status(200).json({
-            status: 'Success',
-            data: data
-        })
-    } catch (err) {
-        return next(createError(400, err, { expose: false }))
-    }
-}
-
-exports.assignImageToUser = async (req, res, next) => {
-    try {
-        const data = await addUserImage(req.body.imageId, req.params.id)
-        console.log(data);
+        const data = await getAllFiles();        
         res.status(200).json({
             status: 'Success',
             data: data

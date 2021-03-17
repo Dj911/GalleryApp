@@ -10,6 +10,7 @@
 	<title>Gallery App</title>
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
 	<meta charset="utf-8" />
+	<script src="/public/javascripts/dashboard.js" defer></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" href="/public/css/main.css" />
 </head>
@@ -30,7 +31,7 @@
 		<section id="main">
 
 			<!-- Banner -->
-			<section id="banner">
+			<<!-- section id="banner">
 				<div class="inner">
 					<h1>Hey,
 					</h1>
@@ -38,22 +39,18 @@
 					<ul class="actions">
 						<li><a href="#galleries" class="button alt scrolly big">Continue</a></li>
 					</ul>
-				</div>
-				<img src="" />
-			</section>
+				</div>				
+			</section> -->
 
 			<!-- Gallery -->
 			<section id="galleries">
 
 				<!-- Photo Galleries -->
-				<div class="gallery">
-					<header class="special">
-						<h2>See Gallery</h2>
-						<img
-							src="https://galleryappdj.s3.ap-south-1.amazonaws.com/media/[Tue Mar 16 2021 15:31:54 GMT+0530 (India Standard Time)]test.gif" />
-					</header>
+				<div class="gallery">					
 					<footer>
-						<a href="gallery" class="button big">Full Gallery</a>
+						<a href="gallery" class="button big">See Full Gallery</a><br />						
+							<input type="file" id="myFile" name="photo" required multiple><br />
+							<input type="submit" value="Upload to Gallery" id="uploadFile">
 					</footer>
 				</div>
 			</section>

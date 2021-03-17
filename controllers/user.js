@@ -1,11 +1,11 @@
 const { create, find, login, update, getUserById } = require('../dbServices/user');
-const { updateImage } = require('../dbServices/mediaServiecs');
+const { updateImage,getUserImages } = require('../dbServices/mediaServiecs');
 const createError = require('http-errors');
 const { jwtTokenGenerator, jwtTokenVerification } = require('../utils/token');
 
 const user = require('../models/user')
 const media = require('../models/media')
-const { image, upload, deleteObj, listMediaObj } = require('../utils/multerFileUpload');
+const { image, upload, deleteObj, listMediaObj, listUserObj } = require('../utils/multerFileUpload');
 const { findByIdAndUpdate } = require('../models/user');
 // upload.single('photo'), image
 
@@ -75,7 +75,7 @@ exports.updateProfile = async (req, res, next) => {
     }
 }
 
-exports.checkImageKey = async (req, res, next) => {
+exports.checkImageKey = async (req, res, next) => {     // Check if user db has an profile image url or not
     try {
         const data = await getUserById(req.params.id);
         if (data.imageKey) {
@@ -87,9 +87,9 @@ exports.checkImageKey = async (req, res, next) => {
     }
 }
 
-exports.updatePicture = async (req, res, next) => {
+exports.updatePicture = async (req, res, next) => {     // Delete if an existing profile image is there and then update the new image in s3 and DB
     try {
-        req.body.imageKey = req.file.key
+        req.body.imageKey = req.file.location;
         const data = await update(req.params.id, { imageKey: req.body.imageKey })
         console.log(req.file)
         res.status(200).json({
@@ -101,9 +101,11 @@ exports.updatePicture = async (req, res, next) => {
     }
 }
 
-exports.favouriteImage = async (req, res, next) => {
+exports.favouriteImage = async (req, res, next) => {        // Add, REmove or Get Favourites images for User
     try {
-        const data = await updateImage(req.body.imageId, req.params.id, req.params.task);    //(imageid,userid)
+        const data = await updateImage(req.body.imageId, req.params.id, req.params.task); //(imageid,userid)    
+        console.log('DATA: ',data)        
+        if(data.length === 0)   return next(createError(400, "No Favourites found!", { expose: false }))
         res.status(200).json({
             status: 'Success!',
             data: data
@@ -114,11 +116,28 @@ exports.favouriteImage = async (req, res, next) => {
 }
 
 let s3Data = []
-exports.getUserImages = async function () {
+exports.getUserProfileImages = async (req, res, next)=> {       // Get User's Profile Image url
     try {
-        const data = await listMediaObj();
-        console.log(data)
+        const data = await getUserById(req.params.id);
+        console.log('KEY: ',data.imageKey)
+        // const updateData = await update(req.params.id, { imageKey: req.body.imageKey,updatedAt: Date.now() })
+        res.status(200).json({
+            status: 'Success!',
+            imageUrl: data.imageKey
+        })
     } catch (err) {
+        return next(createError(400, err, { expose: false }))   
+    }
+}
 
+exports.getUserImages = async (req,res,next)=>{         // Get All the Images assigned to a User
+    try {
+        const data = await getUserImages(req.params.id).select("-user");
+        res.status(200).json({
+            status: 'Success!',
+            imageUrl: data
+        });
+    } catch (err) {
+        return next(createError(400, err, { expose: false }));
     }
 }

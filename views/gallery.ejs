@@ -10,12 +10,26 @@
 	<title>Gallery App</title>
 	<meta charset="utf-8" />
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
-	<script src="/public/javascripts/gallery.js"></script>
+	<script src="/public/javascripts/gallery.js" defer></script>
+	<!-- <script>
+		let imageId = <%= imageUrl  %>;
+		async function addToFav(imageId) {
+			const data = await axios.put(`${window.location.origin}/user/addImage/${localStorage.getItem('userid')}`, {
+				imageId: imageId
+			}, {
+				headers: {
+					Authorization: localStorage.getItem('token')
+				},
+			});
+			console.log('DATA: ', data)
+		}
+	</script> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" href="/public/css/main.css" />
 </head>
 
 <body>
+
 	<div class="page-wrap">
 		<!-- Nav -->
 		<nav id="nav">
@@ -53,28 +67,24 @@
 					</header>
 
 					<div class="content" id="galleryItems">
-						<div class="media all people" id="galleryLiItems">
-							<a href="/public/images/fulls/01.jpg"><img src="/public/images/thumbs/01.jpg" alt=""
-									title="This right here is a caption." onclick="alert('Hello')" /></a>
-						</div>
-						<!-- <div class="media all place">
-							<a href="/public/images/fulls/05.jpg"><img src="/public/images/thumbs/05.jpg" alt=""
-									title="This right here is a caption." /></a>
-						</div>
-						<div class="media all thing">
-							<a href="/public/images/fulls/09.jpg"><img src="/public/images/thumbs/09.jpg" alt=""
-									title="This right here is a caption." /></a>
-						</div>
-						<div class="media all people">
-							<a href="/public/images/fulls/02.jpg"><img src="/public/images/thumbs/02.jpg" alt=""
-									title="This right here is a caption." /></a>
-						</div>
-						<div class="media all people">
-							<a href="/public/images/fulls/06.jpg"><img src="/public/images/thumbs/06.jpg" alt=""
-									title="This right here is a caption." /></a>
-						</div> -->
+						<%let i=0; imageUrl.forEach(element=> { let id = element.id;		// TODO: Pass the id in js function to apply add to fav method
+							if(element.type === 'image'){%>									// TODO: 1 file is not displaying in html
+							<div class="media all people" id="galleryLiItems">
+								<a href=<%=element.url %>><img src=<%=element.url %> alt="image" id="img<%=i%>"
+										title="This right here is a caption." /></a>
+								<button style="display: block;" 
+								onclick="addToFav(id)" >Add to Fav</button>
+							</div>
+							<% }else if(element.type===' video' ){ %>
+									<div class="media all people" id="galleryLiItems">
+										<a href=<%=element.url %>><video width="320" src=<%=element.url %> autoplay
+												alt="video" id="video<%=i%>"></video></a>
+										<button style="display: block;">Add to Fav</button>
+									</div>
+									<% } i++; }); %>
+
+							</div>
 					</div>
-				</div>
 			</section>
 
 			<!-- Contact -->
@@ -133,6 +143,36 @@
 			</footer>
 		</section>
 	</div>
+
+	<!-- Templates -->
+
+	<template id="template">
+
+	</template>
+
+	<div id="id01" class="modal" hidden>
+
+		<form id="form" class="modal-content animate">
+
+			<div class="container">
+				<label for="uemail"><b>Useremail</b></label>
+				<input id="email" type="text" placeholder="Enter Useremail" required>
+
+				<label for="psw"><b>Password</b></label>
+				<input id="password" type="password" placeholder="Enter Password" required>
+
+				<button id="loginbtn" type="submit">Login</button>
+				<p id="errormessage" style="color:red;"></p>
+			</div>
+
+			<div class="container" style="background-color:#f1f1f1">
+				<button type="button" onclick="document.getElementById('id01').style.display='none'"
+					class="cancelbtn">Cancel</button>
+				<span class="psw">Forgot <a href="#">password?</a></span>
+			</div>
+		</form>
+	</div>
+	<!-- --- -->
 
 	<!-- Scripts -->
 	<script src="/public/js/jquery.min.js"></script>

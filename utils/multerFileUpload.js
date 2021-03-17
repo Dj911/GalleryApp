@@ -27,7 +27,7 @@ const upload = multer({
         bucket: "galleryappdj/userProfile",
         key: function (req, file, cb) {
             console.log('FILE: ', file);
-            cb(null, file.originalname); //use Date.now() for unique file keys
+            cb(null, '[' + Date.now() + ']' + file.originalname); //use Date.now() for unique file keys
         }
     })
 });
@@ -38,7 +38,7 @@ const mediaUpload = multer({
         bucket: "galleryappdj/media",
         acl: 'public-read',
         key: function (req, file, cb) {
-            console.log('FILE: ', file);
+            // console.log('FILE: ', file);
             cb(null, '[' + Date.now() + ']' + file.originalname); //use Date.now() for unique file keys
         }
     })
@@ -58,27 +58,44 @@ const upload = multer({ storage: storage }) */
 
 
 const image = async (req, res, next) => {       // Add a single image for User
-    try {
-        console.log(req.file.location)
-        let type = req.file.mimetype.split('/')[0];
-        const data = await media.create({
-            user: req.params.id,
-            mediaType: type,
-            url: req.file.location
-        })
-        res.status(200).json({
-            status: 'Success',
-            data: data
-        })
+    try {        
+        if (req.file === undefined) {     // UPLOADING MULTIPLE FILES            
+            let filesData;
+            for (const key in req.files) {                
+                let type = req.files[key].mimetype.split('/')[0];                
+                filesData = await media.create({
+                    user: req.params.id,
+                    mediaType: type,
+                    url: req.files[key].location,
+                    user: req.params.id
+                })
+            }
+            res.status(200).json({
+                status: 'Success',
+                data: filesData
+            })
+        } else {                                              // UPLOADING ONLY A SINGLE FILE
+            let type = req.file.mimetype.split('/')[0];
+            const data = await media.create({
+                user: req.params.id,
+                mediaType: type,
+                url: req.file.location,
+                user: req.params.id
+            })
+            res.status(200).json({
+                status: 'Success',
+                data: data
+            })
+        }
         // next();
     } catch (err) {
         return next(createError(400, err, { expose: false }))
     }
 }
 
-const imageError = (req, res, next) => {
-    try {
-        if (!req.file) {
+const imageError = (req, res, next) => {       // if upload file is empty
+    try {        
+        if (!req.file && req.file !== undefined) {
             throw new Error('File Error!!')
         }
         next();
@@ -104,6 +121,7 @@ const deleteObj = async (key) => {
     });
 }
 
+// list all media files inside Media folder
 const listMediaObj = async (req, res, next) => {
     let params = {
         Bucket: 'galleryappdj', /* required */
@@ -120,4 +138,19 @@ const listMediaObj = async (req, res, next) => {
     return data.Contents;
 }
 
-module.exports = { upload, image, imageError, deleteObj, noneUpload, mediaUpload, listMediaObj }
+const listUserObj = async (key) => {
+    var params = {
+        Bucket: 'galleryappdj',
+        Prefix: 'userProfile'
+    };
+
+    const info = await s3.listObjects(params, function (err, data) {
+        if (err) console.log(err); // an error occurred
+        else {
+            // console.log(data);    // successful response
+        }
+    }).promise();
+    return info.Contents;
+}
+
+module.exports = { upload, image, imageError, deleteObj, noneUpload, mediaUpload, listMediaObj, listUserObj }
