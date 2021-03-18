@@ -25,6 +25,7 @@ const upload = multer({
     storage: multerS3({
         s3: s3,
         bucket: "galleryappdj/userProfile",
+        acl: 'public-read',
         key: function (req, file, cb) {
             console.log('FILE: ', file);
             cb(null, '[' + Date.now() + ']' + file.originalname); //use Date.now() for unique file keys
@@ -58,15 +59,16 @@ const upload = multer({ storage: storage }) */
 
 
 const image = async (req, res, next) => {       // Add a single image for User
-    try {        
+    try {
         if (req.file === undefined) {     // UPLOADING MULTIPLE FILES            
             let filesData;
-            for (const key in req.files) {                
-                let type = req.files[key].mimetype.split('/')[0];                
+            for (const key in req.files) {
+                let type = req.files[key].mimetype.split('/')[0];
                 filesData = await media.create({
                     user: req.params.id,
                     mediaType: type,
                     url: req.files[key].location,
+                    imageKey: req.files[key].key,
                     user: req.params.id
                 })
             }
@@ -80,6 +82,7 @@ const image = async (req, res, next) => {       // Add a single image for User
                 user: req.params.id,
                 mediaType: type,
                 url: req.file.location,
+                imageKey: req.file.key,
                 user: req.params.id
             })
             res.status(200).json({
@@ -94,7 +97,8 @@ const image = async (req, res, next) => {       // Add a single image for User
 }
 
 const imageError = (req, res, next) => {       // if upload file is empty
-    try {        
+    try {
+        console.log('FILE: ', req.file);
         if (!req.file && req.file !== undefined) {
             throw new Error('File Error!!')
         }
@@ -109,6 +113,21 @@ const imageError = (req, res, next) => {       // if upload file is empty
 const deleteObj = async (key) => {
     var params = {
         Bucket: 'galleryappdj/userProfile',
+        Key: key
+    };
+
+    return s3.deleteObject(params, function (err, data) {
+        if (err) return err;  // error
+        else {
+            console.log('Deleted!')
+            return null;    // deleted
+        }
+    });
+}
+
+const deleteMediaObj = async (key) => {
+    var params = {
+        Bucket: 'galleryappdj/media',
         Key: key
     };
 

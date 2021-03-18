@@ -19,9 +19,10 @@ const userSchema = new mongoose.Schema({
     },
     updatedAt: Date,
     token: String,
-    imageKey: {
+    imageUrl: {
         type: String
     },
+    imageKey: String,
     tokenExpire: Date,
     isActive: {
         type: Boolean,

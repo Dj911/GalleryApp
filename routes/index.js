@@ -2,7 +2,7 @@ var express = require('express');
 const axios = require('axios');
 const userRoute = require('./user');
 
-const { getAllFiles } = require('../dbServices/mediaServiecs');
+const { getAllFiles, getUserImages } = require('../dbServices/mediaServiecs');
 const { login } = require('../dbServices/user');
 
 var router = express.Router();
@@ -11,41 +11,49 @@ router.get('/', function (req, res, next) {
     res.render('index');
 });
 
-router.get('/dashboard', (req, res, next) => {
+router.get('/dashboard', async (req, res, next) => { // TODO: update profile
+    const info = await getUserImages(req.params.userid);
+    const { data } = info;
+    console.log('DATA: ', info);
+    let url = [];
+    info.forEach(el => {
+        url.push({ userId: el.user, imageId: el._id })
+        // console.log('EL: ',url);
+    })
     res.render('dashboard', {
-        imageUrl: ''
+        imageUrl: url
         // token: 
     })
 })
 
-router.get('/gallery', async (req, res, next) => {      // TODO: Fav Images, Delete Images and update profile
-    // console.log(token);
-    const info = await getAllFiles();
+router.get('/gallery', async (req, res, next) => {
+    console.log('UID: ', req.query.userid);
+    const info = await getUserImages(req.query.userid);
     const { data } = info;
-    // console.log('DATA: ',info);
-    let url=[];
-    info.forEach(el =>{        
-        url.push({id: el._id,type: el.mediaType, url: el.url})
+    console.log('DATA: ', info);
+    let url = [];
+    info.forEach(el => {
+        url.push({ id: el._id, type: el.mediaType, url: el.url })
         // console.log('EL: ',url);
-    })    
+    })
     res.render('gallery', {
         imageUrl: url
     },
-    // {async: true}        //FOR USING ASYNC FUNCTION
+        // {async: true}        //FOR USING ASYNC FUNCTION
     )
 })
 
 router.get('/favourites', async (req, res, next) => {
-    const info = await getAllFiles();
+    const info = await getUserImages(req.query.userid);
     const { data } = info;
     // console.log('DATA: ',info);
-    let url=[];
-    info.forEach(el =>{
-        if(el.isFavourite === true){
-            url.push({type: el.mediaType, url: el.url})
+    let url = [];
+    info.forEach(el => {
+        if (el.isFavourite === true) {
+            url.push({ id: el._id, type: el.mediaType, url: el.url })
         }
         // console.log('EL: ',url);
-    })  
+    })
     res.render('favourites', {
         imageUrl: url
     })

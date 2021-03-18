@@ -19,41 +19,23 @@
 	<div class="page-wrap">
 
 		<!-- Nav -->
-		<nav id="nav">
-			<ul>
-				<li><a href="/dashboard" class="active"><span class="icon fa-home"></span></a></li>
-				<li><a href="/gallery"><span class="icon fa-camera-retro"></span></a></li>
-				<li><a href="/favourites"><span class="icon fa-file-text-o"></span></a></li>
-			</ul>
-		</nav>
+		<%- include('header.ejs')%>
 
-		<!-- Main -->
-		<section id="main">
 
-			<!-- Banner -->
-			<<!-- section id="banner">
-				<div class="inner">
-					<h1>Hey,
-					</h1>
-					<p>A fully responsive gallery template by <a href="https://templated.co">TEMPLATED</a></p>
-					<ul class="actions">
-						<li><a href="#galleries" class="button alt scrolly big">Continue</a></li>
-					</ul>
-				</div>				
+			<!-- Main -->
+			<section id="main">
+
+				<!-- Banner -->
+				<<!-- section id="banner">
+					<div class="inner">
+						<h1>Hey,
+						</h1>
+						<p>A fully responsive gallery template by <a href="https://templated.co">TEMPLATED</a></p>
+						<ul class="actions">
+							<li><a href="#galleries" class="button alt scrolly big">Continue</a></li>
+						</ul>
+					</div>
 			</section> -->
-
-			<!-- Gallery -->
-			<section id="galleries">
-
-				<!-- Photo Galleries -->
-				<div class="gallery">					
-					<footer>
-						<a href="gallery" class="button big">See Full Gallery</a><br />						
-							<input type="file" id="myFile" name="photo" required multiple><br />
-							<input type="submit" value="Upload to Gallery" id="uploadFile">
-					</footer>
-				</div>
-			</section>
 
 			<!-- Contact -->
 			<section id="contact">
@@ -80,28 +62,51 @@
 
 				<!-- Form -->
 				<div class="column">
-					<h3>Get in Touch</h3>
-					<form action="#" method="post">
-						<div class="field half first">
-							<label for="name">Name</label>
-							<input name="name" id="name" type="text" placeholder="Name">
-						</div>
-						<div class="field half">
-							<label for="email">Email</label>
-							<input name="email" id="email" type="email" placeholder="Email">
-						</div>
-						<div class="field">
-							<label for="message">Message</label>
-							<textarea name="message" id="message" rows="6" placeholder="Message"></textarea>
-						</div>
-						<ul class="actions">
-							<li><input value="Send Message" class="button" type="submit"></li>
-						</ul>
-					</form>
+
+					<h3>Update Profile</h3>
+					<!-- Banner -->
+
+
+					<div class="inner">
+						<img id="userProfileImage" onclick="getProfile()" alt="UserImage" style="border-radius: 90px;"
+							height="150px" width="150px" /><br />
+						<input type="file" id="profileFile" name="photo"><br />
+						<input type="button" value="Upload Profile Image" id="uploadProfileImage"><br /><br />
+						<!-- <button style="display: block;" onclick="">Remove Profile Picture</button> -->
+
+					</div>
+
+
+					<div class="field half first">
+						<label for="name">Name</label>
+						<input name="name" id="name" type="text" placeholder="Name" required>
+					</div>
+					<div class="field half">
+						<label for="email">Email</label>
+						<input name="email" id="email" type="email" placeholder="Email" required>
+					</div>
+					<div class="field">
+						<label for="message">Mobile Number</label>
+						<input name="mobile_number" id="mobile_number" type="tel" placeholder="Mobile Number" required>
+					</div>
+					<ul class="actions">
+						<li><button type="button" id="profilDetailsUpdate">Update Details</button></li>
+					</ul>
+
 				</div>
 
 			</section>
+			<!-- Gallery -->
+			<section id="galleries">
 
+				<!-- Photo Galleries -->
+				<div class="gallery">
+					<footer>
+						<input type="file" id="myFile" name="photo" required multiple><br />
+						<input type="submit" value="Upload to Gallery" id="uploadFile"><br /><br />
+					</footer>
+				</div>
+			</section>
 			<!-- Footer -->
 			<footer id="footer">
 				<div class="copyright">
@@ -109,7 +114,7 @@
 						href="https://unsplash.com/">Unsplash</a>.
 				</div>
 			</footer>
-		</section>
+			</section>
 	</div>
 
 	<!-- Scripts -->

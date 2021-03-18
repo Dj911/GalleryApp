@@ -1,5 +1,5 @@
 const { create, find, login, update, getUserById } = require('../dbServices/user');
-const { updateImage,getUserImages } = require('../dbServices/mediaServiecs');
+const { updateImage, getUserImages, deleteImage, getImage } = require('../dbServices/mediaServiecs');
 const createError = require('http-errors');
 const { jwtTokenGenerator, jwtTokenVerification } = require('../utils/token');
 
@@ -56,7 +56,7 @@ exports.login = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
     try {
-        const bodyArr = ["mobileNumber", "email"]; //user can only update from this fields
+        const bodyArr = ["name", "email", "mobileNumber"]; //user can only update from this fields
         for (let i of Object.keys(req.body)) {
             //excluding other fields from req.body
             if (!bodyArr.includes(i)) {
@@ -89,9 +89,13 @@ exports.checkImageKey = async (req, res, next) => {     // Check if user db has 
 
 exports.updatePicture = async (req, res, next) => {     // Delete if an existing profile image is there and then update the new image in s3 and DB
     try {
+        const user = await getUserById(req.params.id);
+        if (user.imageKey !== undefined || user.imageKey !== "") {      // DELET EXISTING PROFILE PICTURE ON S3 FIRST UPDATE
+            const dataDelete = await deleteObj(user.imageKey);
+            console.log('DATA: ', dataDelete);
+        }
         req.body.imageKey = req.file.location;
-        const data = await update(req.params.id, { imageKey: req.body.imageKey })
-        console.log(req.file)
+        const data = await update(req.params.id, { imageUrl: req.body.imageKey, imageKey: req.file.key })
         res.status(200).json({
             status: 'Success',
             data: data
@@ -104,8 +108,8 @@ exports.updatePicture = async (req, res, next) => {     // Delete if an existing
 exports.favouriteImage = async (req, res, next) => {        // Add, REmove or Get Favourites images for User
     try {
         const data = await updateImage(req.body.imageId, req.params.id, req.params.task); //(imageid,userid)    
-        console.log('DATA: ',data)        
-        if(data.length === 0)   return next(createError(400, "No Favourites found!", { expose: false }))
+        console.log('DATA: ', data)
+        if (data.length === 0) return next(createError(400, "No Favourites found!", { expose: false }))
         res.status(200).json({
             status: 'Success!',
             data: data
@@ -116,26 +120,39 @@ exports.favouriteImage = async (req, res, next) => {        // Add, REmove or Ge
 }
 
 let s3Data = []
-exports.getUserProfileImages = async (req, res, next)=> {       // Get User's Profile Image url
+exports.getUserProfileImages = async (req, res, next) => {       // Get User's Profile Image url
     try {
         const data = await getUserById(req.params.id);
-        console.log('KEY: ',data.imageKey)
-        // const updateData = await update(req.params.id, { imageKey: req.body.imageKey,updatedAt: Date.now() })
         res.status(200).json({
             status: 'Success!',
-            imageUrl: data.imageKey
+            imageUrl: data.imageUrl
         })
     } catch (err) {
-        return next(createError(400, err, { expose: false }))   
+        return next(createError(400, err, { expose: false }))
     }
 }
 
-exports.getUserImages = async (req,res,next)=>{         // Get All the Images assigned to a User
+exports.getUserImages = async (req, res, next) => {         // Get All the Images assigned to a User
     try {
         const data = await getUserImages(req.params.id).select("-user");
         res.status(200).json({
             status: 'Success!',
             imageUrl: data
+        });
+    } catch (err) {
+        return next(createError(400, err, { expose: false }));
+    }
+}
+
+exports.deleteImage = async (req, res, next) => {
+    try {
+        const image = await getImage(req.body.imageId);
+        console.log('IMAGE: ', image);
+        const dataDelete = await deleteObj(image.imageKey);
+        const data = await deleteImage(req.body.imageId);
+        res.status(200).json({
+            status: 'Image Deleted!'
+            // imageUrl: data
         });
     } catch (err) {
         return next(createError(400, err, { expose: false }));

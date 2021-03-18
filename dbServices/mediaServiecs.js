@@ -19,6 +19,14 @@ exports.updateImage = (imgid, uid, task) => {
         return media.find({ user: uid, isFavourite: true }).select("-__v");
     }
 }
-exports.getUserImages = (id)=>{
-    return media.find({user: id}).select("-__v")
+exports.getUserImages = (id) => {
+    return media.find({ user: id }).select("-__v")
+}
+
+exports.deleteImage = (id) => {
+    return media.findByIdAndDelete(id)
+}
+
+exports.getImage = (id) => {
+    return media.findById(id).select("-__v");
 }

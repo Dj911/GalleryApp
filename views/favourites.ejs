@@ -10,7 +10,7 @@
 	<title>Gallery App</title>
 	<meta charset="utf-8" />
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
-
+	<script src="/public/javascripts/gallery.js" defer></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" href="/public/css/main.css" />
 </head>
@@ -19,119 +19,73 @@
 	<div class="page-wrap">
 
 		<!-- Nav -->
-		<nav id="nav">
-			<ul>
-				<li><a href="/dashboard"><span class="icon fa-home"></span></a></li>
-				<li><a href="/gallery"><span class="icon fa-camera-retro"></span></a></li>
-				<li><a href="/favourites" class="active"><span class="icon fa-file-text-o"></span></a></li>
-			</ul>
-		</nav>
+		<%- include('header.ejs')%>
 
-		<!-- Main -->
-		<section id="main">
 
-			<!-- Header -->
-			<header id="header">
-				<div>Snapshot <span>by TEMPLATED</span></div>
-			</header>
+			<!-- Main -->
+			<section id="main">
 
-			<!-- Section -->
-			<section id="galleries">
+				<!-- Header -->
+				<header id="header">
+					<div>Snapshot <span>by TEMPLATED</span></div>
+				</header>
 
-				<!-- Photo Galleries -->
-				<div class="gallery">
+				<!-- Section -->
+				<section id="galleries">
 
-					<!-- Filters -->
-					<header>
-						<h1>Favourites Gallery</h1>
-						<ul class="tabs">
-							<li><a href="#" data-tag="all" class="button active">All</a></li>
-							<li><a href="#" data-tag="people" class="button">People</a></li>
-							<li><a href="#" data-tag="place" class="button">Places</a></li>
-							<li><a href="#" data-tag="thing" class="button">Things</a></li>
-						</ul>
-					</header>
+					<!-- Photo Galleries -->
+					<div class="gallery">
 
-					<div class="content" id="galleryItems">
-						<%let i=0; if(imageUrl.length===0) { %>
-							<div class="inner">
-							<h1>
-								<p>Seems like you are picky!</p>
-							</h1>							
-					</div>
-					<%}%>
-						<% imageUrl.forEach(element=> {
-							if(element.type === 'image'){%>
-							<div class="media all people" id="galleryLiItems">
-								<a href=<%=element.url %>><img src=<%=element.url %> alt="image" id="img<%=i%>"
-										title="This right here is a caption." /></a>
-							</div>
-							<% }else if(element.type==='video' ){ %>
-								<div class="media all people" id="galleryLiItems">
-									<a href=<%=element.url %>><video width="320" src=<%=element.url %> autoplay
-											alt="video" id="video<%=i%>"></video></a>
+						<!-- Filters -->
+						<header>
+							<h1>Favourites Gallery</h1>
+							<ul class="tabs">
+								<li><a href="#" data-tag="all" class="button active">All</a></li>
+								<li><a href="#" data-tag="people" class="button">Video</a></li>
+								<li><a href="#" data-tag="place" class="button">Images</a></li>
+							</ul>
+						</header>
+
+						<div class="content" id="galleryItems">
+							<%let i=0; if(imageUrl.length===0) { %>
+								<div class="inner">
+									<h1>
+										<p>Seems like you are picky!</p>
+									</h1>
 								</div>
-								<% } i++; }); %>
+								<%}%>
+									<% imageUrl.forEach(element=> {
+										if(element.type === 'image'){%>
+										<div class="media all place" id="galleryLiItems">
+											<a href=<%=element.url %>><img src=<%=element.url %> alt="image" id="img
+												<%=i%>"
+													title="This right here is a caption." /></a>
+											<button style="display: block;" onclick="updateFav(this.value,'removeFav')"
+												value=<%=element.id%>>Remove from Fav
+										</div>
+										<% }else if(element.type==='video' ){ %>
+											<div class="media all people" id="galleryLiItems">
+												<a href=<%=element.url %>><video width="320" src=<%=element.url %>
+														autoplay
+														alt="video" id="video<%=i%>"></video></a>
+												<button style="display: block;"
+													onclick="updateFav(this.value,'removeFav')"
+													value=<%=element.id%>>Remove from Fav
+											</div>
+											<% } i++; }); %>
 
-				</div>
-	</div>
-	</section>
+						</div>
+					</div>
+				</section>
 
-	<!-- Contact -->
-	<section id="contact">
-		<!-- Social -->
-		<div class="social column">
-			<h3>About Me</h3>
-			<p>Mus sed interdum nunc dictum rutrum scelerisque erat a parturient condimentum potenti dapibus
-				vestibulum condimentum per tristique porta. Torquent a ut consectetur a vel ullamcorper a
-				commodo a mattis ipsum class quam sed eros vestibulum quisque a eu nulla scelerisque a elementum
-				vestibulum.</p>
-			<p>Aliquet dolor ultricies sem rhoncus dolor ullamcorper pharetra dis condimentum ullamcorper rutrum
-				vehicula id nisi vel aptent orci litora hendrerit penatibus erat ad sit. In a semper velit
-				eleifend a viverra adipiscing a phasellus urna praesent parturient integer ultrices montes
-				parturient suscipit posuere quis aenean. Parturient euismod ultricies commodo arcu elementum
-				suspendisse id dictumst at ut vestibulum conubia quisque a himenaeos dictum proin dis purus
-				integer mollis parturient eros scelerisque dis libero parturient magnis.</p>
-			<h3>Follow Me</h3>
-			<ul class="icons">
-				<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-				<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-				<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-			</ul>
-		</div>
-
-		<!-- Form -->
-		<div class="column">
-			<h3>Get in Touch</h3>
-			<form action="#" method="post">
-				<div class="field half first">
-					<label for="name">Name</label>
-					<input name="name" id="name" type="text" placeholder="Name">
-				</div>
-				<div class="field half">
-					<label for="email">Email</label>
-					<input name="email" id="email" type="email" placeholder="Email">
-				</div>
-				<div class="field">
-					<label for="message">Message</label>
-					<textarea name="message" id="message" rows="6" placeholder="Message"></textarea>
-				</div>
-				<ul class="actions">
-					<li><input value="Send Message" class="button" type="submit"></li>
-				</ul>
-			</form>
-		</div>
-
-	</section>
-
-	<!-- Footer -->
-	<footer id="footer">
-		<div class="copyright">
-			&copy; Untitled Design: <a href="https://templated.co/">TEMPLATED</a>. Images: <a
-				href="https://unsplash.com/">Unsplash</a>.
-		</div>
-	</footer>
-	</section>
+				<!-- Footer -->
+				<footer id="footer">
+					<div class="copyright">
+						&copy; Untitled Design: <a href="https://templated.co/">TEMPLATED</a>. Images: <a
+							href="https://unsplash.com/">Unsplash</a>.
+					</div>
+				</footer>
+			</section>
 	</div>
 
 	<!-- Scripts -->

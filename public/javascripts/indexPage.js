@@ -25,7 +25,7 @@ const signup = async () => {
         password: password.value //|| adminPassword.value
     }).then(res => {
         alertSigninBox.hidden = false
-        console.log('DATA: ', res)
+        alert('Account Successfully Created! You may now sign in');
     }).catch(err => {
         console.log(err)
         // alert(err.message)
@@ -36,12 +36,12 @@ const signin = async () => {
     const res = await axios.post(`${window.location.origin}/user/login`, {
         email: loginEmail.value, //|| adminUsername.value,
         password: loginPass.value //|| adminPassword.value
-    })    
+    })
     console.log(res.data.data)
     if (res.data.status === 'Success') {
         localStorage.setItem('token', res.data.data.token);
         localStorage.setItem('userid', res.data.data._id);
-        location.href = "/dashboard";
+        location.href = `/dashboard/?userid=${localStorage.getItem('userid')}`;
     } else {
         console.log(res.data)
     }

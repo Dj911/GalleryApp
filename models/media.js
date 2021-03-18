@@ -11,6 +11,7 @@ const mediaSchema = new mongoose.Schema({
         default: 'image'
     },
     url: String,
+    imageKey: String,
     isFavourite: {
         type: Boolean,
         default: false
