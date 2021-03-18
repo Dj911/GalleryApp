@@ -56,6 +56,9 @@ exports.login = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
     try {
+        if (req.body === "") {
+            return next(createError(400, "Empty Body", { expose: false }))
+        }
         const bodyArr = ["name", "email", "mobileNumber"]; //user can only update from this fields
         for (let i of Object.keys(req.body)) {
             //excluding other fields from req.body
