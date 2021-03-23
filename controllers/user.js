@@ -3,6 +3,8 @@ const { updateImage, getUserImages, deleteImage, getImage } = require('../dbServ
 const createError = require('http-errors');
 const { jwtTokenGenerator, jwtTokenVerification } = require('../utils/token');
 
+const bcrypt = require('bcrypt');
+
 const user = require('../models/user')
 const media = require('../models/media')
 const { image, upload, deleteObj, listMediaObj, listUserObj } = require('../utils/multerFileUpload');
@@ -17,6 +19,7 @@ exports.signup = async (req, res, next) => {
     try {
         // console.log(req.file.key)
         // req.body.imageKey = req.file.key
+        req.body.password = await bcrypt.hash(req.body.password, 12);
         console.log(req.body)
         const data = await create(req.body);
         res.status(200).json({
@@ -31,13 +34,17 @@ exports.signup = async (req, res, next) => {
 }
 
 exports.login = async (req, res, next) => {
+    console.log('Login: ', res.locals.login)
     try {
         if (!req.body.email || !req.body.password) { return next(createError(400, "Please enter credentials", { expose: false })) }
-        console.log('LOGIN...')
-        const data = await login(req.body);
-        if (!data) { return next(createError(400, "Please enter valid credentials", { expose: false })) }
+        const data = await find(req.body);
+        const passwordMatch = await bcrypt.compare(req.body.password, data.password);
+        if (!passwordMatch) {
+            return next(createError(400, "Wrong Password", { expose: false }));
+        }
         const token = jwtTokenGenerator(data._id);
         data.token = token;
+        req.session.login = true;
         data.updatedAt = Date.now();
         data.tokenExpire = Date.now() + 60 * 60 * 1000  // 1 hr
         await data.save({
@@ -49,6 +56,7 @@ exports.login = async (req, res, next) => {
             token: token,
             data: data
         })
+        next();
     } catch (err) {
         return next(createError(400, err, { expose: false }))
     }

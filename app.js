@@ -6,6 +6,9 @@ const multer = require('multer');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 
+const session = require('express-session');
+const flash = require('connect-flash');
+
 dotenv.config({ path: "./config/config.env" });
 
 const cons = require('consolidate');
@@ -33,6 +36,15 @@ app.use(logger('dev')); //TODO: Morgan + Winston
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// SESSION MIDDLEWARE
+app.use(session({
+  secret: 'geeksforgeeks',
+  saveUninitialized: true,
+  resave: true
+}));
+app.use(flash());
+
+
 
 app.use('', indexRouter);
 app.use('/users', usersRouter);

@@ -18,17 +18,19 @@ const container = document.getElementById('container');
 
 // FUNCTIONS
 const signup = async () => {
-    const res = axios.post(`${window.location.origin}/user/signup`, {
+    axios.post(`${window.location.origin}/user/signup`, {
         name: userName.value,
         mobileNumber: mobileNumber.value,
         email: email.value, //|| adminUsername.value,
         password: password.value //|| adminPassword.value
     }).then(res => {
         alertSigninBox.hidden = false
+        console.log('RES: ', res)
         alert('Account Successfully Created! You may now sign in');
     }).catch(err => {
-        console.log(err)
-        // alert(err.message)
+        console.log('ERR: ', err)
+        alert(err.message)
+        location.href = '/'
     })
 }
 
@@ -41,6 +43,7 @@ const signin = async () => {
     if (res.data.status === 'Success') {
         localStorage.setItem('token', res.data.data.token);
         localStorage.setItem('userid', res.data.data._id);
+        alert('Login Successful!')
         location.href = `/dashboard/?userid=${localStorage.getItem('userid')}`;
     } else {
         console.log(res.data)

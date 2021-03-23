@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const db = require('../connections/dbMaster');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     name: String,
@@ -30,6 +31,10 @@ const userSchema = new mongoose.Schema({
     }
 }, { collection: 'user' })
 
+/* userSchema.pre('save', async function (next) {
+    this.password = await bcrypt.hash(this.password, 12);
+    next();
+}) */
 const user = db.model('user', userSchema);
 
 module.exports = user;
