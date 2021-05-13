@@ -1,6 +1,6 @@
 const express = require('express');
 const axios = require('axios');
-const fb = require('firebase/app');
+// const fb = require('firebase/app');
 const admin = require("firebase-admin");
 
 const user = require('../models/user')

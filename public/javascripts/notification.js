@@ -34,7 +34,7 @@ messaging.onMessage(async (payload) => {
         icon: '/public/images/notification.jpg'
     };    
     console.log(location.search.split('=')[1] === payload.data.userid);
-    if (Notification.permission === "granted" && location.search.split('=')[1] === payload.data.userid) {
+    if (Notification.permission === "granted") {
         var notification = new Notification(payload.notification.title, notificationOption);
         /* axios.post(`${window.location.origin}/notification/firebase`, {
             registrationToken: token
