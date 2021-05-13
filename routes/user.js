@@ -18,16 +18,18 @@ router.post('/signup', signup);
 
 router.post('/login', login);
 
-router.get('/profileImage/:id', permission, getUserProfileImages);
-router.get('/images/:id', permission, getUserImages);
+router.use(permission);
 
-router.put('/updateProfile/:id', permission, updateProfile);
-router.post('/updatePicture/:id', permission, upload.single('photo'), imageError, updatePicture);
+router.get('/profileImage/:id', getUserProfileImages);
+router.get('/images/:id', getUserImages);
+
+router.put('/updateProfile/:id', updateProfile);
+router.post('/updatePicture/:id', upload.single('photo'), imageError, updatePicture);
 
 
-router.post('/addImage/:id', permission, mediaUpload.array('photo', 10), imageError, image)    //id = userid
-router.put('/deleteImage/:id', permission, deleteImage)    //id = userid
-router.route('/favImage/:task/:id').put(permission, favouriteImage).get(permission, favouriteImage);        // GET, UPDATE, DELETE Fav Images of User
+router.post('/addImage/:id', mediaUpload.array('photo', 10), imageError, image)    //id = userid
+router.put('/deleteImage/:id', deleteImage)    //id = userid
+router.route('/favImage/:task/:id').put(favouriteImage).get(favouriteImage);        // GET, UPDATE, DELETE Fav Images of User
 
 // router.post('/image/:id', permission, upload.single('photo'), imageError, image);
 

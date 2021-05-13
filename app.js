@@ -6,6 +6,9 @@ const multer = require('multer');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 
+const session = require('express-session');
+const flash = require('connect-flash');
+
 dotenv.config({ path: "./config/config.env" });
 
 const cons = require('consolidate');
@@ -19,6 +22,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');    // DEFAULT ROUTE
 const userRoute = require('./routes/user');     // APP ROUTE
 const mediaRoute = require('./routes/media');     // APP ROUTE
+const push = require('./utils/webpushBoilerPlate');
 
 
 var app = express();
@@ -33,6 +37,16 @@ app.use(logger('dev')); //TODO: Morgan + Winston
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// SESSION MIDDLEWARE
+/* app.use(session({
+  secret: 'geeksforgeeks',
+  saveUninitialized: true,
+  resave: true
+}));
+app.use(flash()); */
+
+
+app.use('/push',push)
 
 app.use('', indexRouter);
 app.use('/users', usersRouter);
@@ -40,12 +54,14 @@ app.use('/users', usersRouter);
 app.use('/user', userRoute);
 app.use('/media', mediaRoute);
 
+app.use('/notification', require('./routes/notification'));
 
 
-// catch 404 and forward to error handler
+
+/* // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
-});
+}); */
 
 // APPLICATIONS MIDDLEWARE
 // app.use('/user', userRoute);

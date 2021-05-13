@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<!--
+	Snapshot by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+
+<head>
+    <title>Gallery App</title>
+    <meta charset="utf-8" />
+
+    <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-analytics.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-messaging.js" defer></script>
+    <!-- <script src="/__/firebase/8.4.3/firebase-app.js" deffer></script>
+    <script src="/__/firebase/8.4.3/firebase-messaging.js" deffer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-analytics.js" defer></script>
+    <script src="/__/firebase/init.js" deffer></script> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+    <script src="/public/javascripts/notification.js" defer></script>
+    <script>
+        
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/public/css/main.css" />
+</head>
+
+<body>
+    <button id="notificationBtn" style="display: block;" onclick="tokenGenerate()">Generate FCM Token</button>
+    <button id="notificationBtn" style="display: block;" onclick="func()">Notification</button>
+    <button id="notificationBtn" style="display: block;" onclick="subNotif()">Subcription Notification</button>
+    <button id="notificationBtn" style="display: block;" onclick="subcribe()">Subcribe to Bid's Notiication</button>
+    <button id="notificationBtn" style="display: block;" onclick="unSubcribe()">Un-Subcribe to Bid's Notiication</button>
+    <button id="notificationBtn" style="display: block;" onclick="lout()">Logout</button>
+
+
+    <div class="page-wrap">
+        <!-- Nav -->
+        <%- include('header.ejs')%>
+
+            <!-- Main -->
+            <section id="main">
+
+                <!-- Header -->
+                <header id="header">
+                    <div>Snapshot <span>by TEMPLATED</span></div>
+                </header>
+
+                <!-- Gallery -->
+                <section id="galleries">
+
+                    <!-- Photo Galleries -->
+                    <div class="gallery">
+
+                        <!-- Filters -->
+                        <header>
+                            <h1>Gallery</h1>
+                            <ul class="tabs">
+
+                                <li><a href="#" data-tag="all" class="button active">All</a></li>
+                                <li><a href="#" data-tag="people" class="button">Video</a></li>
+                                <li><a href="#" data-tag="place" class="button">Images</a></li>
+                            </ul>
+                        </header>
+
+                        <div class="content" id="galleryItems">
+                            <%let i=0; imageUrl.forEach(element=> { let id = element.id;
+                                if(element.type === 'image'){%>
+                                <div class="media all place" id="galleryLiItems">
+                                    <a href=<%=element.url %> download><img src=<%=element.url %> alt="image"
+                                        id="img<%=i%>"
+                                            title="This right here is a caption." /></a>
+                                    <button style="display: block;" onclick="updateFav(this.value,'addFav')"
+                                        value=<%=element.id%>>Add
+                                        to
+                                        Fav</button>
+                                    <button style="display: block;" onclick="deleteImage(this.value,'addFav')"
+                                        value=<%=element.id%>>Remove from Gallery</button>
+                                </div>
+                                <% }else if(element.type==='video' ){ %>
+                                    <div class="media all people" id="galleryLiItems">
+                                        <a download href=<%=element.url %> ><video width="320" src=<%=element.url %>
+                                                autoplay
+                                                alt="video" id="video<%=i%>"></video></a>
+                                        <button style="display: block;" onclick="updateFav(this.value,'addFav')"
+                                            value=<%=element.id%>>Add to Fav</button>
+                                        <button style="display: block;" onclick="deleteImage(this.value,'addFav')"
+                                            value=<%=element.id%>>Remove from Gallery</button>
+                                    </div>
+                                    <% } i++; }); %>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer id="footer">
+                    <div class="copyright">
+                        &copy; Untitled Design: <a href="https://templated.co/">TEMPLATED</a>. Images: <a
+                            href="https://unsplash.com/">Unsplash</a>.
+                    </div>
+                </footer>
+            </section>
+    </div>
+
+    <!-- Templates -->
+
+    <template id="template">
+
+    </template>
+
+    <div id="id01" class="modal" hidden>
+
+        <form id="form" class="modal-content animate">
+
+            <div class="container">
+                <label for="uemail"><b>Useremail</b></label>
+                <input id="email" type="text" placeholder="Enter Useremail" required>
+
+                <label for="psw"><b>Password</b></label>
+                <input id="password" type="password" placeholder="Enter Password" required>
+
+                <button id="loginbtn" type="submit">Login</button>
+                <p id="errormessage" style="color:red;"></p>
+            </div>
+
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'"
+                    class="cancelbtn">Cancel</button>
+                <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+        </form>
+    </div>
+    <!-- --- -->
+
+    <!-- Scripts -->
+    <script src="/public/js/jquery.min.js"></script>
+    <script src="/public/js/jquery.poptrox.min.js"></script>
+    <script src="/public/js/jquery.scrolly.min.js"></script>
+    <script src="/public/js/skel.min.js"></script>
+    <script src="/public/js/util.js"></script>
+    <script src="/public/js/main.js"></script>
+
+</body>
+
+</html>
