@@ -36,7 +36,8 @@ window.onload = async () => {       // GET PROFILE IMAGE URL
             Authorization: localStorage.getItem('token'),
         },
     });
-    userProfile.src = data.data.imageUrl
+    console.log('DATA: ',data);
+    userProfile.src = data.data.data.imageUrl
 }
 
 const updateProfile = async () => {

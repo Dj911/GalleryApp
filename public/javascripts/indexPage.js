@@ -10,6 +10,7 @@ const mobileNumber = document.getElementById('mobileNumber');
 const password = document.getElementById('password');
 const loginEmail = document.getElementById('loginEmail');
 const loginPass = document.getElementById('loginPass');
+const signUpForm = document.getElementById('signUpForm');
 
 const alertSigninBox = document.getElementById('alertSignin');
 const alertSignupBox = document.getElementById('alertSignup');
@@ -39,19 +40,22 @@ const signin = async () => {
         email: loginEmail.value, //|| adminUsername.value,
         password: loginPass.value //|| adminPassword.value
     })
-    console.log(res.data.data)
-    if (res.data.status === 'Success') {
+    console.log('DATA: ',res.data.data)
+    if (res.data.msg === 'Success') {
         localStorage.setItem('token', res.data.data.token);
         localStorage.setItem('userid', res.data.data._id);
         alert('Login Successful!')
-        location.href = `/dashboard/?userid=${localStorage.getItem('userid')}`;
+        // location.href = `/dashboard/?userid=${localStorage.getItem('userid')}`;
+        location.href = `/notification/?userid=${localStorage.getItem('userid')}`;
     } else {
         console.log(res.data)
     }
 }
 
 
-
+signUpForm.addEventListener('submit',(el)=>{
+    el.preventDefault();
+})
 
 signUpButton.addEventListener('click', () => {
     container.classList.add("right-panel-active");

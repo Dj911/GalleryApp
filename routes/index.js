@@ -9,14 +9,29 @@ const { login } = require('../dbServices/user');
 
 var router = express.Router();
 
-router.get('', (req, res, next) => {
+/* router.get('', (req, res, next) => {
     req.session.login = false;
     next();
-})
+}) */
 
 router.get('/', function (req, res, next) {
-    res.render('index');
+    res.render('../views/');
 });
+
+router.get('/notification', async (req, res, next) => {
+    // if (!req.session.login) res.render('index');
+    const info = await getUserImages(req.params.userid);
+    const { data } = info;
+    let url = [];
+    info.forEach(el => {
+        url.push({ userId: el.user, imageId: el._id })
+        // console.log('EL: ',url);
+    })
+    res.render('notification', {
+        imageUrl: url
+        // token: 
+    })
+})
 
 router.get('/dashboard', async (req, res, next) => {
     if (!req.session.login) res.render('index');
