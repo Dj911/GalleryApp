@@ -89,12 +89,12 @@ router.post('/firebase', async (req, res,next) => {
         }) */
 
         //? Send to Topic
-        const appMessage = await app.messaging().sendToTopic('Bid', message)
+        // const appMessage = await app.messaging().sendToTopic('Bid', message)
         //? SEND
         // const appMessage = await app.messaging().send(message)
 
         //? SEND TO DEVICE
-        // const appMessage = await app.messaging().sendToDevice(registrationToken, message, notification_options)
+        const appMessage = await app.messaging().sendToDevice(registrationToken, message, notification_options)
         /* .then(response => {
         })
         .catch(error => {
