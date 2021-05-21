@@ -7,7 +7,9 @@ const user = require('../models/user')
 const { getUserById } = require('../dbServices/user');
 
 
-const serviceAccount = require("../dj-test-302805-firebase-adminsdk-9ywqi-373e732516.json");
+// const serviceAccount = require("../dj-test-302805-firebase-adminsdk-9ywqi-373e732516.json");
+const serviceAccount = require("../highvibe-test-firebase-adminsdk-w3m4h-2f494d7e55.json");
+
 // const { response } = require('../app');
 
 // INITIALIZE FIREBASE ADMIN APP
@@ -113,8 +115,10 @@ router.post('/subcribe', (req, res, next) => {
         console.log('BODY: ', req.body)
         // "el5zEjYOxyiaHqoQPvrQ7V:APA91bFsfy1pJJD-8ZGXZFnwGu3Xr6aRpzc6ao_g1hSCILFQipfncbkKKwfgRdM75O_J8oZmx-DICqvFFSvGyOzwXutdrn8H-VwDguYJMjY5Hek4tQwLyODM2cedDNHgi-y1DYQW-FWD";
 
-        //? Subscribe to a topic
-        app.messaging().subscribeToTopic(registrationToken, 'Bid').then(res => {
+        //? Subscribe to a topic        
+        // app.messaging().subscribeToTopic(registrationToken, 'Bid')
+        app.messaging().subscribeToTopic(registrationToken, 'user1nft6')
+        .then(res => {
             console.log('Subscribe to Bids notification');
         }).catch(err => {
             console.log('Subcription Error: ', err);
@@ -135,7 +139,7 @@ router.post('/unSubcribe', (req, res, next) => {
         // "el5zEjYOxyiaHqoQPvrQ7V:APA91bFsfy1pJJD-8ZGXZFnwGu3Xr6aRpzc6ao_g1hSCILFQipfncbkKKwfgRdM75O_J8oZmx-DICqvFFSvGyOzwXutdrn8H-VwDguYJMjY5Hek4tQwLyODM2cedDNHgi-y1DYQW-FWD";
 
         //? Subscribe to a topic
-        app.messaging().unsubscribeFromTopic(registrationToken, 'Bid').then(res => {
+        app.messaging().unsubscribeFromTopic(registrationToken, 'user1nft6').then(res => {
             console.log('Un-Subscribed to Bids notification');
         }).catch(err => {
             console.log('Subcription Error: ', err);
@@ -165,7 +169,8 @@ router.post('/bidNotification', async (req, res, next) => {
         };
 
         //? Send to Topic
-        const appMessage = await app.messaging().sendToTopic('Bid', message)
+        const appMessage = await app.messaging().sendToTopic('user1nft6', message)        
+        // await app.messaging().sendToTopic('Bid', message)
         console.log('RES: ', appMessage)
         res.status(200).json({
             status: 'Success'

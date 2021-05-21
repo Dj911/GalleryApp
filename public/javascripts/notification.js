@@ -1,5 +1,6 @@
-const SERVER_KEY = "AAAAXO3p_5U:APA91bGo0bgQaaiJc_RYeKdrnmumRY4oez6h9jwTlwoyk6BRWbSgFvokSKOxVmNbxko-SdBpPfZu9hqLkACCvTRagqX4NiOhfYjFsCZLfvbzwlYMDpNoReGNwuGS5TZKWciRaOm3I6WS";
 
+// Gallery App Firebase Config and Server Key
+/* const SERVER_KEY = "AAAAXO3p_5U:APA91bGo0bgQaaiJc_RYeKdrnmumRY4oez6h9jwTlwoyk6BRWbSgFvokSKOxVmNbxko-SdBpPfZu9hqLkACCvTRagqX4NiOhfYjFsCZLfvbzwlYMDpNoReGNwuGS5TZKWciRaOm3I6WS";
 const firebaseConf = {
     apiKey: "AIzaSyBUaKz446tKaEeWE3k7epn-12aMZXmj42U",
     authDomain: "dj-test-302805.firebaseapp.com",
@@ -8,6 +9,18 @@ const firebaseConf = {
     messagingSenderId: "399128526741",
     appId: "1:399128526741:web:4133fdceaed7053a17809c",
     measurementId: "G-RFZH4V1M3M"
+} */
+
+// Highvibe Firebase Config ans Server Key
+const SERVER_KEY = "AAAAvCHIMdA:APA91bGY3LG-rncGihQh9Z3rbWzc8P0J1Yg_ga8HdB99zJ3rNwugpGoyPHkMsj_eY1gAgy1_AmriNf14ppZUlRnbrAVMEG4zvF5jCTVi-v0cah13TskH0xAfMnL8WVo-sBUquQ9zuZCy";
+const firebaseConf = {
+    apiKey: "AIzaSyB3zOKi5F7vpg4Q4hsd3LjHpDyMqNAzlTg",
+    authDomain: "highvibe-test.firebaseapp.com",
+    projectId: "highvibe-test",
+    storageBucket: "highvibe-test.appspot.com",
+    messagingSenderId: "808020619728",
+    appId: "1:808020619728:web:f79e2bc06c23ae2c7f49d5",
+    measurementId: "G-4Z40VPCT58"
 }
 
 // Register Firebase in the Service Worker
@@ -32,8 +45,8 @@ messaging.onMessage(async (payload) => {
     const notificationOption = {
         body: payload.notification.body,
         icon: '/public/images/notification.jpg'
-    };    
-    console.log(location.search.split('=')[1] === payload.data.userid);
+    };
+    // console.log(location.search.split('=')[1] === payload.data.userid);
     if (Notification.permission === "granted") {
         var notification = new Notification(payload.notification.title, notificationOption);
         /* axios.post(`${window.location.origin}/notification/firebase`, {
